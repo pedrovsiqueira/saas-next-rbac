@@ -13,12 +13,11 @@ import { Separator } from '@/components/ui/separator'
 import { useFormState } from '@/hooks/use-form-state'
 
 import { signInWithGithub } from '../actions'
-import { signInWithEmailAndPassword } from './actions'
+import { signUpAction } from './actions'
 
-export function SignInForm() {
-  const [{ success, message, errors }, handleSubmit, isPending] = useFormState(
-    signInWithEmailAndPassword,
-  )
+export function SignUpForm() {
+  const [{ success, message, errors }, handleSubmit, isPending] =
+    useFormState(signUpAction)
 
   return (
     <div className="space-y-4">
@@ -34,6 +33,16 @@ export function SignInForm() {
         )}
 
         <div className="space-y-1">
+          <Label htmlFor="name">Name</Label>
+          <Input name="name" id="name" />
+          {errors?.name && (
+            <p className="text-xs font-medium text-red-500 dark:text-red-400">
+              {errors.name[0]}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-1">
           <Label htmlFor="email">E-mail</Label>
           <Input name="email" type="email" id="email" />
           {errors?.email && (
@@ -46,30 +55,44 @@ export function SignInForm() {
         <div className="space-y-1">
           <Label htmlFor="password">Password</Label>
           <Input name="password" type="password" id="password" />
-
           {errors?.password && (
             <p className="text-xs font-medium text-red-500 dark:text-red-400">
               {errors.password[0]}
             </p>
           )}
-          <Link
-            href="/auth/forgot-password"
-            className="text-sx font-medium text-foreground hover:underline"
-          >
-            Forgot your password?
-          </Link>
+        </div>
+
+        <div className="space-y-1">
+          <Label htmlFor="password_confirmation">Confirm your Password</Label>
+          <Input
+            name="password_confirmation"
+            type="password"
+            id="password_confirmation"
+          />
+          {errors?.password_confirmation && (
+            <p className="text-xs font-medium text-red-500 dark:text-red-400">
+              {errors.password_confirmation[0]}
+            </p>
+          )}
         </div>
 
         <Button type="submit" className="w-full" disabled={isPending}>
           {isPending ? (
             <Loader2 className="size-4 animate-spin" />
           ) : (
-            'Sign in with e-mail'
+            'Create Account'
           )}
         </Button>
 
         <Button variant="link" className="w-full" size="sm" asChild>
-          <Link href="/auth/sign-up">Create new account</Link>
+          <Link href="/auth/sign-in">Already registered? Sign in</Link>
+        </Button>
+
+        <Separator />
+
+        <Button type="submit" variant="outline" className="w-full">
+          <Image className="mr-2 size-4 dark:invert" src={githubIcon} alt="" />
+          Sign up with Github
         </Button>
       </form>
 
